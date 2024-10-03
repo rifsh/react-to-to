@@ -2,13 +2,12 @@ import { useState } from "react";
 
 const Start = ({ data }) => {
 
-    const [items, setItems] = useState(['Task 1', 'Task 2', 'Task 3', 'Task 4']);
+    const [items, setItems] = useState([]);
     const [draggingItem, setDraggingItem] = useState(null);
     const [value, setValue] = useState(null);
+    const [tasks, setTasks] = useState([]);
 
     const handleDragStart = (e, index) => {
-        // console.log(index);
-
         setDraggingItem(index);
     };
 

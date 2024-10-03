@@ -1,13 +1,12 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import './add-task.css'
+import { taskService } from '../services/task.service';
+import { toast, ToastContainer } from 'react-toastify';
 
 const AddTask = ({ showModal, closeModal }) => {
     const [open, setOpen] = useState(false);
+
     const [taskDate, settaskDate] = useState({
         title: '',
         descriotion: '',
@@ -16,12 +15,23 @@ const AddTask = ({ showModal, closeModal }) => {
     })
 
     if (!showModal) {
-        return null; // Don't render anything if the modal is not visible
+        return null;
     }
 
-    const addTask = () => {
-        console.log(taskDate);
-
+    const addTask = async () => {
+        let userId = localStorage.getItem('userId');
+        try {
+            const data = await taskService.addTask(taskDate, userId);
+            if (data.data.message === 'Success') {
+                toast.success('Task added');
+                closeModal();
+            } else {
+                toast.warning("Something went wrong")
+            }
+        } catch (error) {
+            console.log(error);
+            toast.warning("Something went wrong")
+        }
     }
 
     return (
@@ -40,6 +50,7 @@ const AddTask = ({ showModal, closeModal }) => {
                                     className='py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out'
                                     type="text"
                                     placeholder='Task name' />
+                                {taskDate.title === '' && <div className='text-red-600 text-sm'>* Title is required</div>}
                             </div>
                             <div className='flex flex-col'>
                                 <label htmlFor="" className='mb-1'>Description</label>
@@ -51,7 +62,7 @@ const AddTask = ({ showModal, closeModal }) => {
                             </div>
                             <div className="">
                                 <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-2">Select Priority</label>
-                                <select id="priority" name="priority" className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                                <select onChange={(e) => { settaskDate({ ...taskDate, priority: e.target.value }) }} id="priority" name="priority" className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
                                     <option value="low">Low</option>
                                     <option value="medium">Medium</option>
                                     <option value="high">High</option>
@@ -73,6 +84,9 @@ const AddTask = ({ showModal, closeModal }) => {
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000} />
         </div>
     );
 }
