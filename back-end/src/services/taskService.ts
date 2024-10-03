@@ -36,9 +36,18 @@ const updateTask = async (userId: string, taskId: string, updateData: Task): Pro
         return false;
     }
 }
+const deleteTask = async (taskId: string):Promise<boolean> => {
+    try {
+        const deleting = await taskModel.findByIdAndDelete(taskId);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
 
 export const taskService = {
     addTask,
     fetchTask,
-    updateTask
+    updateTask,
+    deleteTask,
 }

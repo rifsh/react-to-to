@@ -7,6 +7,7 @@ const toDoRoutes: Router = express.Router();
 // toDoRoutes.use(userRouteProtection)
 toDoRoutes.post('/create-task/:id', toDoController.addTask)
 toDoRoutes.get('/all-task/:id', toDoController.fetchTask)
+toDoRoutes.delete('/delete-task/:id', toDoController.deleteTask)
 toDoRoutes.patch('/:userId/task/:taskId', toDoController.updateTask)
 
 export default toDoRoutes

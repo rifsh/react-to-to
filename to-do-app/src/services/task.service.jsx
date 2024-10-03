@@ -15,11 +15,21 @@ const fetchTasks = async (userId) => {
         const response = axios.get(`${baseUrl}//all-task/${userId}`);
         return response;
     } catch (error) {
-        throw error;    
+        throw error;
+    }
+}
+
+const deleteTask = async (taskId) => {
+    try {
+        const response = axios.delete(`${baseUrl}/delete-task/${taskId}`);
+        return response
+    } catch (error) {
+
     }
 }
 
 export const taskService = {
     addTask,
-    fetchTasks
+    fetchTasks,
+    deleteTask
 }

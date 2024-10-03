@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import AddTask from './add-task';
 import { useTodo } from '../hooks/useTodos';
+import { taskService } from '../services/task.service';
+import { toast, ToastContainer } from 'react-toastify';
 
 const TodoList = () => {
     const [showModal, setShowModal] = useState(false);
-    const { tasks } = useTodo(localStorage.getItem('userId'), showModal);
+    const [d, setDelete] = useState('');
+    const { tasks } = useTodo(localStorage.getItem('userId'), showModal, d);
 
     const openModal = () => {
         setShowModal(true);
@@ -12,7 +15,15 @@ const TodoList = () => {
     const handleModalClose = () => {
         setShowModal(false);
     }
-
+    const deleteTask = async (id) => {
+        const response = await taskService.deleteTask(id);
+        if (response.data.message === "Task deleted") {
+            toast.warn(response.data.message);
+            setDelete(id);
+        } else {
+            toast.warning(response.data.message)
+        }
+    }
 
     return (
         <div className="h-[100vh] flex justify-center items-center">
@@ -59,7 +70,7 @@ const TodoList = () => {
                                             </td>}
                                             <td className="px-4 py-2 text-center border border-gray-300">
                                                 <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Edit</button>
-                                                <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition ml-2">Delete</button>
+                                                <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition ml-2" onClick={() => { deleteTask(x._id) }}>Delete</button>
                                             </td>
                                         </tr>
                                     ))}
@@ -71,6 +82,10 @@ const TodoList = () => {
 
             </div>
             <AddTask showModal={showModal} closeModal={handleModalClose} />
+
+            <ToastContainer
+                position="top-center"
+                autoClose={5000} />
         </div>
     )
 }

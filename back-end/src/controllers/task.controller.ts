@@ -47,8 +47,23 @@ const updateTask = catchAsync(async (req: Request, res: Response, next: NextFunc
 
 })
 
+const deleteTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const taskId: string = req.params.id;
+    const response = await taskService.deleteTask(taskId);
+    if (response) {
+        res.status(200).json({
+            message: "Task deleted"
+        })
+    } else {
+        res.status(404).json({
+            message: "Something went wrong"
+        })
+    }
+})
+
 export const toDoController = {
     addTask,
     fetchTask,
-    updateTask
+    updateTask,
+    deleteTask
 }
