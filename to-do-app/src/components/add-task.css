@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 
 h2 {
@@ -20,16 +21,28 @@ label {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-/* .modal-content {
+.modal-content {
   background: white;
   padding: 20px;
   border-radius: 8px;
   max-width: 500px;
   width: 100%;
-  text-align: center;
+  text-align: left;
+  position: relative;
+  animation-name: modalFrom;
+  animation-duration: 1s;
 }
 
-.btn-open-modal,
+@keyframes modalFrom {
+  0%{
+    top: -300px;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+/* .btn-open-modal,
 .btn-close-modal {
   margin-top: 20px;
 } */

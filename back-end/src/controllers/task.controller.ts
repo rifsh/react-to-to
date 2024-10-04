@@ -18,6 +18,7 @@ const addTask = catchAsync(async (req: Request, res: Response, next: NextFunctio
         next(new CustomeError('Error creating Task', 500))
     }
 })
+
 const fetchTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.id;
     const data: Task[] | boolean = await taskService.fetchTask(userId);
@@ -30,14 +31,25 @@ const fetchTask = catchAsync(async (req: Request, res: Response, next: NextFunct
         next(new CustomeError('No data found', 404))
     }
 })
+
+const taskById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const taskId = req.params.id;
+    const task = await taskService.taskById(taskId);
+    res.status(200).json({
+        data:task
+    })
+})
+
 const updateTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.userId;
     const taskId: string = req.params.taskId;
     const updateTaskData: Task = req.body;
+    console.log(req.body);
+    
     const data = await taskService.updateTask(userId, taskId, updateTaskData);
     if (data) {
         res.status(200).json({
-            message: data
+            message: data,
         })
     } else {
         res.status(500).json({
@@ -65,5 +77,6 @@ export const toDoController = {
     addTask,
     fetchTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    taskById
 }

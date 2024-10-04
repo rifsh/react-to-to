@@ -24,13 +24,12 @@ const SignupPage = () => {
         e.preventDefault();
         try {
             if (await userRegister(FormData)) {
-                // toast.success('Registration successful! Redirecting to login...');
+                toast.success('Registration successful! Redirecting to login...');
                 navigate('/');
             }
             // console.log(userRegistration.);
         } catch (error) {
             toast.error('Registration failed: ' + err.message);
-
         }
     }
 

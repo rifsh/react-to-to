@@ -21,9 +21,33 @@ const LoginPage = () => {
 
         loginData.userNameOrEmail = mail.current.value;
         loginData.password = password.current.value;
-        const response = await userLogin(loginData);
-        if (response.data) {
-            toast.success('Success', {
+        try {
+            const response = await userLogin(loginData);
+            if (response.data.message.token) {
+                toast.success('Success', {
+                    position: 'top-center',
+                    autoClose: 5000,
+                    draggable: true,
+                    theme: 'colored',
+                    progress: undefined,
+                    transition: Bounce
+                })
+                localStorage.setItem('token', response.data.message.token);
+                localStorage.setItem('userId', response.data.message.userId);
+                navigate('/home');
+            } else {
+                toast.warning(response.response.data.message, {
+                    position: 'top-center',
+                    autoClose: 5000,
+                    draggable: true,
+                    theme: 'colored',
+                    progress: undefined,
+                    transition: Bounce
+                })
+                // alert(response.response.data.message)
+            }
+        } catch (error) {
+            toast.warning('User not found', {
                 position: 'top-center',
                 autoClose: 5000,
                 draggable: true,
@@ -31,19 +55,6 @@ const LoginPage = () => {
                 progress: undefined,
                 transition: Bounce
             })
-            localStorage.setItem('token', response.data.message.token);
-            localStorage.setItem('userId', response.data.message.userId);
-            navigate('/home');
-        } else {
-            toast.warning(response.response.data.message, {
-                position: 'top-center',
-                autoClose: 5000,
-                draggable: true,
-                theme: 'colored',
-                progress: undefined,
-                transition: Bounce
-            })
-            // alert(response.response.data.message)
         }
     }
 

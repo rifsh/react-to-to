@@ -23,11 +23,21 @@ const fetchTask = async (id: string): Promise<Task[] | boolean> => {
         return false;
     }
 }
-const updateTask = async (userId: string, taskId: string, updateData: Task): Promise<boolean | string> => {
+const taskById = async (taskId: string) => {
     try {
+        const task:Task = await taskModel.findById(taskId);
+        return task;
+    } catch (error) {
+
+    }
+}
+const updateTask = async (userId: string, taskId: string, updateData: Task): Promise<boolean | Task> => {
+    try {
+        console.log(updateData);
+        
         const data: Task = await taskModel.findOneAndUpdate({ user: userId, _id: taskId }, { $set: updateData });
         if (data) {
-            return 'task Updated successfully';
+            return data;
         } else {
             return false;
         }
@@ -36,7 +46,7 @@ const updateTask = async (userId: string, taskId: string, updateData: Task): Pro
         return false;
     }
 }
-const deleteTask = async (taskId: string):Promise<boolean> => {
+const deleteTask = async (taskId: string): Promise<boolean> => {
     try {
         const deleting = await taskModel.findByIdAndDelete(taskId);
         return true;
@@ -48,6 +58,7 @@ const deleteTask = async (taskId: string):Promise<boolean> => {
 export const taskService = {
     addTask,
     fetchTask,
+    taskById,
     updateTask,
     deleteTask,
 }

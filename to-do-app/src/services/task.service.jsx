@@ -12,8 +12,27 @@ const addTask = async (taskData, userId) => {
 
 const fetchTasks = async (userId) => {
     try {
-        const response = axios.get(`${baseUrl}//all-task/${userId}`);
+        const response = axios.get(`${baseUrl}/all-task/${userId}`);
         return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+const fetchTaskId = async (taskId) => {
+    try {
+        const response = await axios.get(`${baseUrl}/task-by-id/${taskId}`);
+        return response
+    } catch (error) {
+        throw error
+    }
+}
+
+const updateTask = async (userId, taskId, data) => {
+    try {
+        const response = await axios.patch(`${baseUrl}/${userId}/task/${taskId}`, data)
+        return response;
+
     } catch (error) {
         throw error;
     }
@@ -31,5 +50,7 @@ const deleteTask = async (taskId) => {
 export const taskService = {
     addTask,
     fetchTasks,
+    fetchTaskId,
+    updateTask,
     deleteTask
 }
