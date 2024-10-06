@@ -6,6 +6,7 @@ const toDoRoutes: Router = express.Router();
 
 // toDoRoutes.use(userRouteProtection)
 toDoRoutes.post('/create-task/:id', toDoController.addTask)
+toDoRoutes.post('/date-sort-task/:id', toDoController.sortTask)
 toDoRoutes.get('/all-task/:id', toDoController.fetchTask)
 toDoRoutes.get('/task-by-id/:id', toDoController.taskById)
 toDoRoutes.delete('/delete-task/:id', toDoController.deleteTask)

@@ -1,3 +1,4 @@
+import { date } from "joi";
 import { Task } from "../model/interfaces/task.model"
 import { taskModel } from "../model/schemas/task.schema"
 
@@ -25,7 +26,7 @@ const fetchTask = async (id: string): Promise<Task[] | boolean> => {
 }
 const taskById = async (taskId: string) => {
     try {
-        const task:Task = await taskModel.findById(taskId);
+        const task: Task = await taskModel.findById(taskId);
         return task;
     } catch (error) {
 
@@ -34,7 +35,7 @@ const taskById = async (taskId: string) => {
 const updateTask = async (userId: string, taskId: string, updateData: Task): Promise<boolean | Task> => {
     try {
         console.log(updateData);
-        
+
         const data: Task = await taskModel.findOneAndUpdate({ user: userId, _id: taskId }, { $set: updateData });
         if (data) {
             return data;
@@ -55,10 +56,28 @@ const deleteTask = async (taskId: string): Promise<boolean> => {
     }
 }
 
+const fetchTaskByDate = async (userId: string, start: Date, end: Date): Promise<Task[]> => {
+    const fromDate: Date = new Date(start);
+    const toDate: Date = new Date(end);
+    try {
+        const userTask = await taskModel.find({ user: userId });
+        const tasks: Task[] = await taskModel.find({
+            dueDate: {
+                $gte: fromDate,
+                $lte: toDate
+            },
+        });
+        return tasks
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const taskService = {
     addTask,
     fetchTask,
     taskById,
     updateTask,
     deleteTask,
+    fetchTaskByDate
 }

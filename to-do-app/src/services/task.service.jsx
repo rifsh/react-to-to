@@ -47,10 +47,20 @@ const deleteTask = async (taskId) => {
     }
 }
 
+const taskDateSorting = async (date, userId) => {
+    try {
+        const response = axios.post(`${baseUrl}/date-sort-task/${userId}`, date);
+        return response
+    } catch (error) {
+        throw error
+    }
+}
+
 export const taskService = {
     addTask,
     fetchTasks,
     fetchTaskId,
     updateTask,
-    deleteTask
+    deleteTask,
+    taskDateSorting
 }

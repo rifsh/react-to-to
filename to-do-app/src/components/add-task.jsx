@@ -11,7 +11,7 @@ const AddTask = ({ showModal, closeModal }) => {
         descriotion: '',
         priority: 'low',
         dueDate: '',
-        status: '',
+        status: 'Pending',
         loading: false
     })
 

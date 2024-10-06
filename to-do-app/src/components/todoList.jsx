@@ -10,8 +10,12 @@ const TodoList = () => {
         page: '',
         taskId: '',
     });
-    const [d, setDelete] = useState('');
-    const { tasks } = useTodo(localStorage.getItem('userId'), showModal, d);
+    const [date, setDate] = useState({
+        startDate: '',
+        endDate: ''
+    });
+    const userId = localStorage.getItem('userId');
+    const { tasks } = useTodo(userId, showModal, date);
 
     const dateFormat = (isoString) => {
         const date = new Date(isoString);
@@ -41,11 +45,27 @@ const TodoList = () => {
         const response = await taskService.deleteTask(id);
         if (response.data.message === "Task deleted") {
             toast.warn(response.data.message);
-            setDelete(id);
+            setShowModal(true);
         } else {
             toast.warning(response.data.message)
         }
     }
+
+    const dateHandler = async () => {
+        try {
+            const task = await taskService.taskDateSorting(date, userId);
+            const { data } = task;
+            setDelete('date')
+        } catch (error) {
+
+        }
+    }
+
+    if (date.startDate && date.endDate) {
+        dateHandler()
+    }
+
+
 
     return (
         <div className="h-[100vh] flex justify-center items-center font-serif">
@@ -53,13 +73,12 @@ const TodoList = () => {
                 <div className='top mt-5 flex items-end justify-between flex-wrap flex-shrink-0'>
                     <div className=''>
                         <h1 className='text-4xl font-medium font-sans'>My Todo</h1>
-                        <input type="text" className='border-2 border-blue-200 mt-5 rounded-md py-1 px-3 w-40 focus:outline-none transition-all' placeholder='Search' />
                     </div>
                     <div className='flex flex-col items-end'>
                         <button className='bg-gray-700 text-white py-2 px-4 rounded-lg' onClick={openModal}>New task</button>
                         <div className='mt-5'>
-                            <input type="date" className='border-2 border-blue-200 rounded-md py-1 px-3 me-2' />
-                            <input type="date" className='border-2 border-blue-200 rounded-md py-1 px-3' />
+                            <input type="date" onChange={(e) => setDate({ ...date, startDate: e.target.value })} className='border-2 border-blue-200 rounded-md py-1 px-3 me-2' />
+                            <input type="date" onChange={(e) => setDate({ ...date, endDate: e.target.value })} className='border-2 border-blue-200 rounded-md py-1 px-3' />
                         </div>
                     </div>
                     <div className="container mx-auto p-4">
@@ -88,7 +107,7 @@ const TodoList = () => {
                                                 <td className="px-4 py-2 border border-gray-300">{x.title}</td>
                                                 <td className="px-4 py-2 border border-gray-300">{x.descriotion}</td>
                                                 <td className="px-4 py-2 border border-gray-300 font-mono">{dateFormat(x.dueDate)}</td>
-                                                <td className="px-4 py-2 border border-gray-300"  style={taskStyle}>
+                                                <td className="px-4 py-2 border border-gray-300" style={taskStyle}>
                                                     <span >{x.status}</span>
                                                 </td>
                                                 <td className="px-4 py-2 text-center border border-gray-300 font-sans">

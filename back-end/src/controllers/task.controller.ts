@@ -36,7 +36,7 @@ const taskById = catchAsync(async (req: Request, res: Response, next: NextFuncti
     const taskId = req.params.id;
     const task = await taskService.taskById(taskId);
     res.status(200).json({
-        data:task
+        data: task
     })
 })
 
@@ -45,7 +45,7 @@ const updateTask = catchAsync(async (req: Request, res: Response, next: NextFunc
     const taskId: string = req.params.taskId;
     const updateTaskData: Task = req.body;
     console.log(req.body);
-    
+
     const data = await taskService.updateTask(userId, taskId, updateTaskData);
     if (data) {
         res.status(200).json({
@@ -73,10 +73,23 @@ const deleteTask = catchAsync(async (req: Request, res: Response, next: NextFunc
     }
 })
 
+const sortTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId: string = req.params.id;
+    const { startDate, endDate } = req.body;
+    const task = await taskService.fetchTaskByDate(userId, startDate, endDate);
+    if (task) {
+        res.status(200).json({
+            data: task
+        })
+    }
+})
+
+
 export const toDoController = {
     addTask,
     fetchTask,
     updateTask,
     deleteTask,
-    taskById
+    taskById,
+    sortTask
 }
